@@ -8,7 +8,8 @@ import (
 func main() {
 	fmt.Println("Hello, World!");
 	apiService := pubg_api.CreateAPIService("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiI4ZjY4NjcxMC04ZjIwLTAxM2MtYmQ4Yy0yYWNjZjk1NjI0ZjIiLCJpc3MiOiJnYW1lbG9ja2VyIiwiaWF0IjoxNzA0NTg2ODYxLCJwdWIiOiJibHVlaG9sZSIsInRpdGxlIjoicHViZyIsImFwcCI6IjkxZWU0Y2M4LWY2MTEtNDUxOS05NjQ1LTEzNWJlN2Y4NjkyMiJ9.tadtjH48XZwaRKRSh-ROjHFHuO2dpjrzYASkixz-px0");
-	apiService.GetAccountId("PracticeofEno2")
+	accountId, _ := apiService.GetAccountId("PracticeofEno2")
+	fmt.Println(accountId);
 	// r := gin.Default();
 	// apiGroup := r.Group("/api");
 	// router.SetupAPIRoutes(apiGroup);

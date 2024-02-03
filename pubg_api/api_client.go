@@ -93,9 +93,7 @@ func (a APIService) GetAccountId(nickname string) (string, error){
 
 	// ID 값 출력
 	if len(playerInfo.Data) > 0 {
-		playerID := playerInfo.Data[0].ID
-		fmt.Println("플레이어 ID:", playerID)
-		return playerID, nil
+		return playerInfo.Data[0].ID, nil
 	} 
 	return "", nil
 }
