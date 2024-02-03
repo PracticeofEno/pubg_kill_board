@@ -12,3 +12,11 @@ Backend
 
 Frontend
 - 웹소켓 클라이언트는 해당 정보를 받아서 상태 갱신
+
+
+## TDD 도입 해봄
+test 폴더 안에 테스트 파일 넣을것
+```
+cd project_root
+go run ./test
+```
