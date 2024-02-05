@@ -1,0 +1,17 @@
+generator db {
+  provider = "go run github.com/steebchen/prisma-client-go"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = "postgresql://postgres:dkflfkd@localhost:5432/pubg"
+}
+ 
+model User {
+  id      Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  apiKey     String @unique
+  Active    Boolean @default(false)
+  random_string String?
+}

@@ -1,4 +1,4 @@
-package pubg_api
+package utils
 
 import (
 	"encoding/json"
