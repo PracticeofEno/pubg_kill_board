@@ -12,6 +12,17 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   apiKey     String @unique
-  Active    Boolean @default(false)
-  random_string String?
+  active    Boolean @default(false)
+  randomString String @unique
+  percents Percent[]
+  currentKill Int @default(0)
+  targetKill Int  @default(0)
+}
+
+model Percent {
+  id Int @id @default(autoincrement())
+  count Int
+  percent Int
+  user    User   @relation(fields: [userId], references: [id])
+  userId  Int
 }
