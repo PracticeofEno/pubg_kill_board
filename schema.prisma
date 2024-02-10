@@ -15,6 +15,7 @@ model User {
   active    Boolean @default(false)
   randomString String @unique
   percents Percent[]
+  nickName String @default("PracticeofEno2")
   currentKill Int @default(0)
   targetKill Int  @default(0)
 }

@@ -10,6 +10,12 @@ import (
 
 func SetupUsersRoute(apiGroup *gin.RouterGroup) {
     // API 라우트 설정
+	apiGroup.GET("/test", func(c *gin.Context) {
+		randomString := c.Query("random_string")
+		hub := utils.GetHub()
+		hub.GetWsClient(randomString).Emit("pong2", "haha")
+	})
+
     apiGroup.GET("/exist", func(ctx *gin.Context) {
         randomString := ctx.Query("random_string")
         exist := service.ExistRandomString(randomString)
