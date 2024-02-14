@@ -3,19 +3,13 @@ package handlers
 import (
 	"fmt"
 	service "kill_board/internal/app/services"
-	"kill_board/pkg/utils"
+	"kill_board/pkg/utils/dto"
 
 	"github.com/gin-gonic/gin"
 )
 
 func SetupUsersRoute(apiGroup *gin.RouterGroup) {
     // API 라우트 설정
-	apiGroup.GET("/test", func(c *gin.Context) {
-		randomString := c.Query("random_string")
-		hub := utils.GetHub()
-		hub.GetWsClient(randomString).Emit("pong2", "haha")
-	})
-
     apiGroup.GET("/exist", func(ctx *gin.Context) {
         randomString := ctx.Query("random_string")
         exist := service.ExistRandomString(randomString)
@@ -40,7 +34,7 @@ func SetupUsersRoute(apiGroup *gin.RouterGroup) {
     })
 
     apiGroup.POST("/user", func (c *gin.Context) {
-        objTmp := utils.UpdateUserData{}
+        objTmp := dto.UpdateUserData{}
         errA := c.ShouldBind(&objTmp);
         if errA != nil {
             c.JSON(400, gin.H{
@@ -67,7 +61,7 @@ func SetupUsersRoute(apiGroup *gin.RouterGroup) {
     })
 
     apiGroup.POST("/percent", func(c *gin.Context) {
-        obj := utils.PercentReqeust{}
+        obj := dto.PercentReqeust{}
         errA := c.ShouldBind(&obj);
         // Body형태가 안맞으면 거부 
         if errA != nil {

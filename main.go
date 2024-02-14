@@ -2,7 +2,7 @@ package main
 
 import (
 	"kill_board/internal/app/handlers"
-	"kill_board/pkg/utils"
+	"kill_board/pkg/utils/websocket_client"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -27,9 +27,7 @@ func GinMiddleware(allowOrigin string) gin.HandlerFunc {
     }
 }
 
-type Tmp struct {
-    Message string `json:"message"`
-}
+
 func main() {
     r := gin.Default();
     usersGroup := r.Group("/users");
@@ -37,7 +35,7 @@ func main() {
     r.Use(GinMiddleware("*"))
 
     server := socketio.NewServer(nil)
-    utils.SetupWebscoket(r, server)
+    websocket_client.SetupWebscoket(r, server)
     defer server.Close()
     
     r.Run("0.0.0.0:8080") // listen and serve on 0.0.0.0:8080;
@@ -45,8 +43,31 @@ func main() {
 
 
 // func main() {
-// 	client := utils.GetClient()
-// 	ctx := context.Background()
-// 	client.User.FindUnique(db.User.ID.Equals(1)).Update(
-// 	)
+//     apiService := utils.CreateAPIService("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiI4ZjY4NjcxMC04ZjIwLTAxM2MtYmQ4Yy0yYWNjZjk1NjI0ZjIiLCJpc3MiOiJnYW1lbG9ja2VyIiwiaWF0IjoxNzA0NTg2ODYxLCJwdWIiOiJibHVlaG9sZSIsInRpdGxlIjoicHViZyIsImFwcCI6IjkxZWU0Y2M4LWY2MTEtNDUxOS05NjQ1LTEzNWJlN2Y4NjkyMiJ9.tadtjH48XZwaRKRSh-ROjHFHuO2dpjrzYASkixz-px0")
+//     accountId, err:= apiService.GetAccountId("PracticeofEno2")
+//     fmt.Println(accountId)
+//     if err != nil {
+//         fmt.Println(err)
+//         return
+//     }
+//     repositories.AddUserCurrentKillByApiKey(apiService.ApiKey, 5)
+//     // ids, err := apiService.GetLastMatchId()
+//     // if err != nil {
+//     //     fmt.Println(err)
+//     //     return
+//     // }
+//     // fmt.Printf("last match id : %s\n", ids)
+
+//     // userData, err := apiService.GetMatchData(ids)
+//     // if err != nil {
+//     //     fmt.Println(err)
+//     //     return
+//     // }
+//     // fmt.Println(userData)
+    
+//     // fmt.Println(matchData)
+    
+// 	// client := utils.GetClient()
+// 	// ctx := context.Background()
+    
 // }

@@ -1,4 +1,4 @@
-package utils
+package db_utils
 
 import (
 	"fmt"
@@ -12,6 +12,7 @@ func GetClient() *db.PrismaClient {
 		fmt.Println("client is not null")
         return client
     } else {
+		fmt.Println("client is not null")
         client = db.NewClient()
         if err := client.Prisma.Connect(); err != nil {
             client = nil
