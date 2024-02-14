@@ -4,13 +4,22 @@ import (
 	"context"
 	"fmt"
 	"kill_board/db"
-	"kill_board/pkg/utils"
+	"kill_board/db_utils"
+	"kill_board/pkg/utils/dto"
 	"math/rand"
 )
 
+func ChangeActiveByRandomString(randomString string, active bool) (error) {
+	client := db_utils.GetClient()
+	ctx := context.Background()
+	client.User.FindUnique(db.User.RandomString.Equals(randomString)).Update(
+		db.User.Active.Set(active),
+	).Exec(ctx)
+	return nil
+}
 
 func ExistWithApiKey(apiKey string) (bool, error) {
-    client := utils.GetClient()
+    client := db_utils.GetClient()
     ctx := context.Background()
     _, err := client.User.FindFirst(db.User.APIKey.Equals(apiKey)).Exec(ctx)
     if err != nil {
@@ -22,7 +31,7 @@ func ExistWithApiKey(apiKey string) (bool, error) {
 }
 
 func GetUserByApiKey(apiKey string) (*db.UserModel, error) {
-    client := utils.GetClient()
+    client := db_utils.GetClient()
     ctx := context.Background()
     user, err := client.User.FindFirst(db.User.APIKey.Equals(apiKey)).Exec(ctx)
     if err != nil {
@@ -32,7 +41,7 @@ func GetUserByApiKey(apiKey string) (*db.UserModel, error) {
 }
 
 func GetUserByRandomString(randomString string) (*db.UserModel, error) {
-    client := utils.GetClient()
+    client := db_utils.GetClient()
     ctx := context.Background()
     user, err := client.User.FindFirst(db.User.RandomString.Equals(randomString)).Exec(ctx)
     if err != nil {
@@ -42,10 +51,12 @@ func GetUserByRandomString(randomString string) (*db.UserModel, error) {
 }
 
 func GetUserByRandomStringWithRelation(randomString string) (*db.UserModel, error) {
-    client := utils.GetClient()
+    client := db_utils.GetClient()
     ctx := context.Background()
     user2, err2 := client.User.FindFirst(
-        db.User.RandomString.Equals(randomString)).With(db.User.Percents.Fetch()).Exec(ctx)
+        db.User.RandomString.Equals(randomString)).With(
+			db.User.Percents.Fetch().OrderBy(db.Percent.Percent.Order(db.ASC)),
+		).Exec(ctx)
     if err2 != nil {
         return nil, err2
     } else {
@@ -54,7 +65,7 @@ func GetUserByRandomStringWithRelation(randomString string) (*db.UserModel, erro
 }
 
 func CreateApiKey(apiKey string) (*db.UserModel, error) {
-    client := utils.GetClient()
+    client := db_utils.GetClient()
     ctx := context.Background()
 
     const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
@@ -75,7 +86,7 @@ func CreateApiKey(apiKey string) (*db.UserModel, error) {
 }
 
 func DeleteApiKey(apiKey string) (error) {
-    client := utils.GetClient()
+    client := db_utils.GetClient()
     ctx := context.Background()
     _, err := client.User.FindUnique(db.User.APIKey.Equals(apiKey)).Delete().Exec(ctx)
     if err != nil {
@@ -85,7 +96,7 @@ func DeleteApiKey(apiKey string) (error) {
 }
 
 func GetRandomStringByApiKey(apiKey string) (string, error) {
-    client := utils.GetClient()
+    client := db_utils.GetClient()
     ctx := context.Background()
     user, err := client.User.FindFirst(db.User.APIKey.Equals(apiKey)).Exec(ctx)
     if err != nil {
@@ -95,7 +106,7 @@ func GetRandomStringByApiKey(apiKey string) (string, error) {
 }
 
 func ExistRandomString(randomString string) (bool) {
-    client := utils.GetClient()
+    client := db_utils.GetClient()
     ctx := context.Background()
     _, err := client.User.FindFirst(db.User.RandomString.Equals(randomString)).Exec(ctx)
     if err != nil {
@@ -105,8 +116,44 @@ func ExistRandomString(randomString string) (bool) {
     }
 }
 
+func AddUserCurrentKillByApiKey(apiKey string, addKill int) (error) {
+	client := db_utils.GetClient()
+	ctx := context.Background()
+	client.User.FindUnique(db.User.APIKey.Equals(apiKey)).Update(
+		db.User.CurrentKill.Increment(addKill),
+	).Exec(ctx)
+	return nil
+}
+
+func AddUserTargetKillByApiKey(apiKey string, addKill int) (error) {
+	client := db_utils.GetClient()
+	ctx := context.Background()
+	client.User.FindUnique(db.User.APIKey.Equals(apiKey)).Update(
+		db.User.TargetKill.Increment(addKill),
+	).Exec(ctx)
+	return nil
+}
+
+func AddUserCurrentKillByRandomString(randomString string, addKill int) (error) {
+	client := db_utils.GetClient()
+	ctx := context.Background()
+	client.User.FindUnique(db.User.RandomString.Equals(randomString)).Update(
+		db.User.CurrentKill.Increment(addKill),
+	).Exec(ctx)
+	return nil
+}
+
+func AddUserTargetKillByRandomString(randomString string, addKill int) (error) {
+	client := db_utils.GetClient()
+	ctx := context.Background()
+	client.User.FindUnique(db.User.RandomString.Equals(randomString)).Update(
+		db.User.TargetKill.Increment(addKill),
+	).Exec(ctx)
+	return nil
+}
+
 func UpdateUserCurrentKillByRandomString(randomString string, currentKill int) (error) {
-    client := utils.GetClient()
+    client := db_utils.GetClient()
     ctx := context.Background()
     client.User.FindUnique(db.User.RandomString.Equals(randomString)).Update(
         db.User.CurrentKill.Set(currentKill),
@@ -115,7 +162,7 @@ func UpdateUserCurrentKillByRandomString(randomString string, currentKill int) (
 }
 
 func UpdateUserTargetKillByRandomString(randomString string, targetKill int) (error) {
-    client := utils.GetClient()
+    client := db_utils.GetClient()
     ctx := context.Background()
     client.User.FindUnique(db.User.RandomString.Equals(randomString)).Update(
         db.User.TargetKill.Set(targetKill),
@@ -124,14 +171,14 @@ func UpdateUserTargetKillByRandomString(randomString string, targetKill int) (er
 }
 
 func DeletePercentDataByUserID(userID int) (error) {
-    client := utils.GetClient()
+    client := db_utils.GetClient()
     ctx := context.Background()
     client.Percent.FindMany(db.Percent.UserID.Equals(userID)).Delete().Exec(ctx)
     return nil
 }
 
-func CreatePercentDataByUserID(userId int,  data[] utils.PercentData) (error) {
-    client := utils.GetClient()
+func CreatePercentDataByUserID(userId int,  data[] dto.PercentData) (error) {
+    client := db_utils.GetClient()
     ctx := context.Background()
     for _, d := range data {
         _, err := client.Percent.CreateOne(
