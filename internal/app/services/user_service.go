@@ -113,6 +113,7 @@ func UpdateUserData(data dto.UpdateUserData) {
     repositories.CreatePercentDataByUserID(user.ID, data.PercentData)
     repositories.UpdateUserCurrentKillByRandomString(data.RandomString, data.CurrentKill)
     repositories.UpdateUserTargetKillByRandomString(data.RandomString, data.TargetKill)
+	repositories.UpdateUserNicknameByID(user.ID, data.Nickname)
 }
 
 func CreateGorutine(randomString string, server *socketio.Server) (error) {
@@ -120,7 +121,7 @@ func CreateGorutine(randomString string, server *socketio.Server) (error) {
     if err != nil {
         return err
     } else {
-        worker := auto_kill.NewWorker(user.APIKey, user.NickName, randomString);
+        worker := auto_kill.NewWorker(user.APIKey, user.Nickname, randomString);
         if !user.Active {
             fmt.Printf("%s - 고루틴을 실행합니다", user.RandomString)
             repositories.ChangeActiveByRandomString(randomString, true)

@@ -170,6 +170,15 @@ func UpdateUserTargetKillByRandomString(randomString string, targetKill int) (er
     return nil
 }
 
+func UpdateUserNicknameByID(userID int, nickname string) (error) {
+	client := db_utils.GetClient()
+	ctx := context.Background()
+	client.User.FindUnique(db.User.ID.Equals(userID)).Update(
+		db.User.Nickname.Set(nickname),
+	).Exec(ctx)
+	return nil
+}
+
 func DeletePercentDataByUserID(userID int) (error) {
     client := db_utils.GetClient()
     ctx := context.Background()

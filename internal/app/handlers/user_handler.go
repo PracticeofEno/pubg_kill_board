@@ -13,9 +13,15 @@ func SetupUsersRoute(apiGroup *gin.RouterGroup) {
     apiGroup.GET("/exist", func(ctx *gin.Context) {
         randomString := ctx.Query("random_string")
         exist := service.ExistRandomString(randomString)
-        ctx.JSON(200, gin.H{
-            "exist": exist,
-        })
+		if !exist {
+			ctx.JSON(400, gin.H{
+				"error": "random string is not found",
+			})
+		} else {
+			ctx.JSON(200, gin.H{
+				"exist": exist,
+			})
+		}
     })
 
     apiGroup.GET("/user", func (c *gin.Context)  {

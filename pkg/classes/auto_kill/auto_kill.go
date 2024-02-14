@@ -23,7 +23,7 @@ func NewWorker(apikey string, nickname string, randomString string) Worker {
     if err != nil {
         panic(err)
     }
-    apiService.GetAccountId(user.NickName)
+    apiService.GetAccountId(user.Nickname)
     lastMatchId, err := apiService.GetLastMatchId()
     if err != nil {
         panic(err)

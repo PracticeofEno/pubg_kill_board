@@ -13,6 +13,7 @@ type PercentReqeust struct {
 type UpdateUserData struct {
 	RandomString string        `json:"random_string" binding:"required"`
 	PercentData  []PercentData `json:"percent_data" binding:"required"`
+	Nickname     string        `json:"nickname" binding:"required"`
 	TargetKill   int           `json:"target_kill"`
 	CurrentKill  int           `json:"current_kill"`
 }

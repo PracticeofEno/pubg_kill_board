@@ -25,8 +25,12 @@ func SetupWebscoket(router *gin.Engine, server *socketio.Server) {
 				"error": "not found",
 			})
 		} else {
-			worker := auto_kill.NewWorker(user.APIKey, user.NickName, randomString);
-			go worker.Run()
+			if !user.Active {
+				repositories.ChangeActiveByRandomString(randomString, true)
+				worker := auto_kill.NewWorker(user.APIKey, user.Nickname, randomString);
+				go worker.Run()
+			}
+			
 		}
     })
 
