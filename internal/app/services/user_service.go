@@ -121,7 +121,7 @@ func CreateGorutine(randomString string, server *socketio.Server) (error) {
     if err != nil {
         return err
     } else {
-        worker := auto_kill.NewWorker(user.APIKey, user.Nickname, randomString);
+        worker := auto_kill.NewWorker(user.APIKey, user.Nickname, randomString, server);
         if !user.Active {
             fmt.Printf("%s - 고루틴을 실행합니다", user.RandomString)
             repositories.ChangeActiveByRandomString(randomString, true)

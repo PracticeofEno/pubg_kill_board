@@ -27,7 +27,7 @@ func SetupWebscoket(router *gin.Engine, server *socketio.Server) {
 		} else {
 			if !user.Active {
 				repositories.ChangeActiveByRandomString(randomString, true)
-				worker := auto_kill.NewWorker(user.APIKey, user.Nickname, randomString);
+				worker := auto_kill.NewWorker(user.APIKey, user.Nickname, randomString, server);
 				go worker.Run()
 			}
 			

@@ -4,9 +4,10 @@ import (
 	"fmt"
 	"kill_board/internal/app/repositories"
 	"kill_board/pkg/classes/api_client"
-	"kill_board/pkg/utils/hub"
 	"strings"
 	"time"
+
+	socketio "github.com/googollee/go-socket.io"
 )
 
 type Worker struct {
@@ -15,9 +16,10 @@ type Worker struct {
     RandomString   string
     LastMatchId     string
     PrevLastMatchId string
+	Server 			*socketio.Server
 }
 
-func NewWorker(apikey string, nickname string, randomString string) Worker {
+func NewWorker(apikey string, nickname string, randomString string, server *socketio.Server) Worker {
     apiService := api_client.CreateAPIService(apikey)
     user, err := repositories.GetUserByApiKey(apikey)
     if err != nil {
@@ -34,6 +36,7 @@ func NewWorker(apikey string, nickname string, randomString string) Worker {
         LastMatchId:     lastMatchId,
         PrevLastMatchId: lastMatchId,
         RandomString:  randomString,
+		Server: server,
     }
 }
 
@@ -79,8 +82,7 @@ func (w *Worker) Run() {
             }
         }
         w.LastMatchId = lastMatchId
-        hub_tmp := hub.GetHub()
-        hub_tmp.GetWsClient(w.RandomString).Emit("pong2", "haha")
+		w.Server.BroadcastToRoom("/", w.RandomString, "pong2", "haha")
         count = 0
     }
 }

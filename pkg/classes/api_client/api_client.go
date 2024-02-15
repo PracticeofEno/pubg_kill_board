@@ -227,6 +227,7 @@ func (a *APIService) GetAccountId(nickname string) (string, error){
         return "", err
     }
     defer resp.Body.Close()
+	
     if resp.StatusCode != 200 {
         return "", fmt.Errorf("error: Unexpected status code %d", resp.StatusCode)
     }
